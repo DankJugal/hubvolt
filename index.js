@@ -35,8 +35,7 @@ setInterval(() => {
           { headers: { 'Content-Type': 'text/plain' }, timeout: 10000 }
         );
         if (!response.data) {
-          // Response body is empty, update device_last_connected
-          const UPDATE_QUERY = `UPDATE devices SET device_last_connected = NOW() WHERE device_name = ?`;
+          const UPDATE_QUERY = `UPDATE devices SET device_status = 'offline', device_last_connected = NOW() WHERE device_name = ?`;
           db.query(UPDATE_QUERY, [device.device_name], (err) => {
             if (err) {
               console.error(`Error updating device_last_connected for ${device.device_name}:`, err.message);
@@ -45,12 +44,10 @@ setInterval(() => {
             }
           });
         } else {
-          // Echo succeeded, print the response
           console.log(`Echo response from ${device.device_name}:`, response.data);
         }
       } catch (err) {
-        // Echo failed, update device_last_connected
-        const UPDATE_QUERY = `UPDATE devices SET device_last_connected = NOW() WHERE device_name = ?`;
+        const UPDATE_QUERY = `UPDATE devices SET device_status = 'offline', device_last_connected = NOW() WHERE device_name = ?`;
         db.query(UPDATE_QUERY, [device.device_name], (updateErr) => {
           if (updateErr) {
             console.error(`Error updating device_last_connected for ${device.device_name}:`, updateErr.message);
@@ -62,4 +59,4 @@ setInterval(() => {
       }
     }
   });
-}, 10000);
+}, 60000);
