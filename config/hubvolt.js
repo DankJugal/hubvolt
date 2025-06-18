@@ -1,8 +1,8 @@
 const db = require('mysql2');
 const hubvolt = db.createPool({
-    host : process.env.host,
-    user : process.env.user,
-    password : process.env.password,
-    database : process.env.database
+    host : "localhost",
+    user : "root",
+    password : "6103",
+    database : "hubvolt",
 });
 module.exports = hubvolt;

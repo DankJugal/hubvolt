@@ -5,8 +5,9 @@ const PORT = 3000;
 const hubvolt = require('./router/hubVolt');
 const authRoutes = require('./router/authRoute');
 const db = require('./config/hubvolt');
-
+app.use(express.json());
 app.use(express.text());
+
 app.use('/', authRoutes);
 app.use('/hubvolt', hubvolt);
 
