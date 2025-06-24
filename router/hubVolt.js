@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-const authenticateAdmin = require('../middleware/authenticate');
-const updateDeviceStatus = require('../controllers/hubvolt/updateDeviceStatus');
+const getDevices = require('../controllers/hubvolt/getDevices');
+const updateDevice = require('../controllers/hubvolt/updateDevice');
+const deleteDevice = require('../controllers/hubvolt/deleteDevice');
 const registerDevice = require('../controllers/hubvolt/registerDevice');
 
-// --- Public endpoint to register a device ---
 router.post('/register', registerDevice);
-// --- Admin-protected routes ---
-// router.get('/all', authenticateAdmin, fetchAllDevices);
-// router.get('/:device_name', authenticateAdmin, fetchDevice);
-router.post('/control/:device_name/:status', authenticateAdmin, updateDeviceStatus);
-// router.delete('/:device_name', authenticateAdmin, removeDevice);
+router.get('/devices', getDevices);
+router.put('/update/:device_name', updateDevice);
+router.delete('/delete/:device_name', deleteDevice);
+
 
 module.exports = router;
