@@ -37,14 +37,14 @@ const echoAllDevices = async () => {
         if (response.data && typeof response.data === 'string') {
           const UPDATE_QUERY = `
             UPDATE devices 
-            SET device_status = 'online', device_last_connected = NOW()
+            SET device_status = 'online'
             WHERE device_name = ?`;
           db.query(UPDATE_QUERY, [device.device_name]);
           console.log(`Echo from ${device.device_name}: ${response.data}`);
         } else {
           const UPDATE_QUERY = `
             UPDATE devices 
-            SET device_status = 'offline'
+            SET device_status = 'offline', device_last_connected = NOW(), device_port_status = 'OFF'
             WHERE device_name = ?`;
           db.query(UPDATE_QUERY, [device.device_name]);
           console.warn(`Empty response from ${device.device_name}`);
@@ -53,7 +53,7 @@ const echoAllDevices = async () => {
       .catch((err) => {
         const UPDATE_QUERY = `
           UPDATE devices 
-          SET device_status = 'offline'
+          SET device_status = 'offline', device_last_connected = NOW(), device_port_status = 'OFF'
           WHERE device_name = ?`;
         db.query(UPDATE_QUERY, [device.device_name]);
         console.error(`Error from ${device.device_name}:`, err.message);
