@@ -23,11 +23,18 @@ const registerDevice = async (req, res) => {
         return res.status(400).send('Missing required fields');
     }
     try {
+        // Check if the MAC address is already registered to a different device
+        const FIND_MAC = `SELECT * FROM devices WHERE device_mac_address = ? AND device_name != ?`;
+        const [macRows] = await db.promise().query(FIND_MAC, [device_mac_address, device_name]);
+        if (macRows.length > 0) {
+            return res.status(409).send('MAC address already registered to another device');
+        }
+
         // Check if the device already exists in the database
         const FIND_DEVICE = `SELECT * FROM devices WHERE device_name = ? AND device_mac_address = ?`;
         const [rows] = await db.promise().query(FIND_DEVICE, [device_name, device_mac_address]);
 
-        //update the existing device with new IP Address and Status and last_connected_time
+        // Update the existing device with new IP Address and Status and last_connected_time
         if (rows.length > 0) {
             const UPDATE_DEVICE = `UPDATE devices SET device_ip_address = ?, device_status = 'online', device_last_connected = NOW() WHERE device_name = ? AND device_mac_address = ?`;
             await db.promise().query(UPDATE_DEVICE, [device_ip_address, device_name, device_mac_address]);
